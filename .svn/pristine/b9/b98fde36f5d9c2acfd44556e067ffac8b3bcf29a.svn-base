@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="File">
+
+    <sql id="Sql-Where-File">
+         AND A.DEL_YN    = 'N'
+        <if test="@common.util.CommUtils@isNotEmpty(dtySeCd  )"> AND A.DTY_SE_CD       = #{dtySeCd  }</if>
+        <if test="@common.util.CommUtils@isNotEmpty(dcmtNo   )"> AND A.DCMT_NO         = #{dcmtNo   }</if>
+        <if test="@common.util.CommUtils@isNotEmpty(dtlDcmtNo)"> AND A.DTL_DCMT_NO     = #{dtlDcmtNo}</if>
+        <if test="@common.util.CommUtils@isNotEmpty(papeCd   )"> AND A.PAPE_CD         = #{papeCd   }</if>
+        <if test="@common.util.CommUtils@isNotEmpty(upPapeCd )"> AND B.UP_PAPE_CD      = #{upPapeCd }</if>
+    </sql>
+    <sql id="Sql-Column-File">
+        A.SN              AS "sn",
+        A.DTY_SE_CD       AS "dtySeCd",
+        A.DCMT_NO         AS "dcmtNo",
+        A.DTL_DCMT_NO     AS "dtlDcmtNo",
+        A.PAPE_CD         AS "papeCd",
+        A.FILE_PATH       AS "filePath",
+        A.STRG_FILE_NM    AS "strgNm",
+        A.FILE_NM         AS "fileNm",
+        A.FILE_SZ         AS "fileSz",
+        A.PRCS_STUS_CD    AS "prcsStusCd",
+        FN_GET_CODENM('CT028', A.PRCS_STUS_CD) AS "prcsStusNm",
+        A.PRCS_CN         AS "prcsCn",
+		A.MNGR_REG_YN     AS "mngrRegYn",
+        A.DEL_YN          AS "delYn",
+        A.RGTR_NO                                      AS "rgtrNo",
+        TO_CHAR(A.REG_YMD,   'yyyy-mm-dd hh24:mi:ss')  AS "regDttm",
+		TO_CHAR(A.REG_YMD,   'yyyy-mm-dd')             AS "regDate",
+        A.MDFR_NO                                      AS "mdfrNo",
+        TO_CHAR(A.MDFCN_YMD, 'yyyy-mm-dd hh24:mi:ss')  AS "mdfDttm",
+		TO_CHAR(A.MDFCN_YMD, 'yyyy-mm-dd')             AS "mdfDate"
+    </sql>
+
+    <!-- 제출서류목록조회 -->
+    <select id="listFile" resultType="java.util.HashMap" parameterType="business.com.file.service.FileVO">
+        SELECT <include refid="Sql-Column-File"/>
+              ,B.PAPE_NM         AS "papeNm"
+              ,B.UP_PAPE_CD      AS "upPapeCd"
+              ,(SELECT PAPE_NM
+                  FROM TMP_PAPE_CODE
+                 WHERE PAPE_CD = B.UP_PAPE_CD
+               )                 AS "upPapeNm"
+          FROM TMP_APLY_FILE A,
+               TMP_PAPE_CODE B
+         WHERE A.PAPE_CD   = B.PAPE_CD
+               <include refid="Sql-Where-File"/>
+         ORDER BY
+               A.SN
+    </select>
+    <select id="listFileCount" resultType="int" parameterType="business.com.file.service.FileVO">
+        SELECT COUNT(1)
+          FROM TMP_APLY_FILE A,
+               TMP_PAPE_CODE B
+         WHERE A.PAPE_CD   = B.PAPE_CD
+               <include refid="Sql-Where-File"/>
+    </select>
+    <select id="viewFile" resultType="business.com.file.service.FileVO" parameterType="string">
+        SELECT <include refid="Sql-Column-File"/>
+              ,B.PAPE_NM         AS "papeNm"
+              ,B.UP_PAPE_CD      AS "upPapeCd"
+              ,(SELECT PAPE_NM
+                  FROM TMP_PAPE_CODE
+                 WHERE PAPE_CD = B.UP_PAPE_CD
+               )                 AS "upPapeNm"
+          FROM TMP_APLY_FILE A,
+               TMP_PAPE_CODE B
+         WHERE A.PAPE_CD   = B.PAPE_CD
+           AND A.DEL_YN    = 'N'
+           AND A.SN        = #{sn}
+    </select>
+
+    <!-- 서류기준 파일목록 조회 -->
+    <select id="listFileByPape" resultType="java.util.HashMap" parameterType="business.com.file.service.FileVO">
+        SELECT <include refid="Sql-Column-File"/>
+          FROM TMP_APLY_FILE  A
+         WHERE A.DTY_SE_CD    = #{dtySeCd}
+           AND A.PAPE_CD      = #{papeCd}
+           AND A.DCMT_NO      = #{dcmtNo}
+           AND A.DTL_DCMT_NO  = #{dtlDcmtNo}
+           AND A.DEL_YN       = 'N'
+         ORDER BY
+               SN DESC
+    </select>
+    <select id="listFileByArray" resultType="java.util.HashMap" parameterType="business.com.file.service.FileVO">
+        SELECT <include refid="Sql-Column-File"/>
+          FROM TMP_APLY_FILE  A
+         WHERE A.DEL_YN = 'N'
+           AND A.SN IN <foreach item="item" collection="snList" separator="," open="(" close=")">#{item}</foreach>
+    </select>
+
+    <insert id="regiFile" parameterType="business.com.file.service.FileVO">
+        <selectKey keyProperty="sn" resultType="string" order="BEFORE">
+            SELECT NEXTVAL('SEQ_APLY_FILE')
+        </selectKey>
+        INSERT
+          INTO TMP_APLY_FILE
+             ( SN,
+               DTY_SE_CD,
+               DCMT_NO,
+               DTL_DCMT_NO,
+               PAPE_CD,
+               FILE_PATH,
+               STRG_FILE_NM,
+               FILE_NM,
+               FILE_SZ,
+               PRCS_STUS_CD,
+               PRCS_CN,
+               MNGR_REG_YN,
+               DEL_YN,
+               RGTR_NO,
+               REG_YMD
+             )
+        VALUES
+             ( #{sn},
+               #{dtySeCd},
+               #{dcmtNo},
+               #{dtlDcmtNo},
+               #{papeCd},
+               #{filePath},
+               #{strgNm},
+               #{fileNm},
+               #{fileSz},
+               #{prcsStusCd},
+               #{prcsCn},
+               #{mngrRegYn}
+               #{delYn},
+               #{gsUserNo},
+               SYSDATE
+             )
+    </insert>
+
+    <!-- 서류코드관리 상세조회 -->
+    <select id="viewPapeFile" resultType="common.file.FileInfo" parameterType="business.com.file.service.FileVO">
+        SELECT A.FILE_NM    AS "fileName",
+               A.FILE_NM    AS "saveName",
+               A.FILE_PATH  AS "filePath"
+          FROM TMP_PAPE_CODE A
+         WHERE PAPE_CD      = #{papeCd}
+           AND UP_PAPE_CD   = #{upPapeCd}
+    </select>
+    
+    <!-- 신청서류목록 조회 -->
+    <select id="listPapeFile" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.UP_PAPE_CD      AS "upPapeCd",
+               A.PAPE_CD         AS "papeCd",
+               A.PAPE_NM         AS "papeNm",
+               A.FILE_NM         AS "fileNm",
+               A.FILE_PATH       AS "filePath",
+               A.ESNTL_YN        AS "esntlYn",
+               A.DOWN_CNT        AS "downCnt",
+               A.LIMT_CNT        AS "limtCnt"
+          FROM TMP_PAPE_CODE     B
+         WHERE A.PAPE_DTY_SE_CD  = #{papeDtySeCd}
+           AND A.UP_PAPE_CD      = #{upPapeCd}
+           AND A.PAPE_CD         = #{papeCd}
+        <if test="@common.util.CommUtils@isEmpty(dcmtNo)">
+           AND A.USE_YN          = 'Y'
+        </if>
+        <if test="@common.util.CommUtils@isNotEmpty(dcmtNo)">
+           AND (   EXISTS (
+                   SELECT 1
+                     FROM TMP_APLY_FILE
+                    WHERE DTY_SE_CD = A.PAPE_DTY_SE_CD
+                      AND PAPE_CD   = A.PAPE_CD
+                      AND DCMT_NO   = #{dcmtNo}
+                   )
+                OR (A.USE_YN = 'Y')
+               )
+        </if>
+         ORDER BY
+               A.PAPE_DTY_SE_CD,
+               A.UP_PAPE_CD,
+               A.CD_ORDR,
+               A.PAPE_CD
+    </select>
+
+    <!-- 신청서류그룹 조회 -->
+    <select id="listPapeFileGroup" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.UP_PAPE_CD      AS "papeCd",
+              (SELECT PAPE_NM
+                 FROM TMP_PAPE_CODE
+                WHERE PAPE_CD  = A.UP_PAPE_CD
+              )                  AS "papeNm"
+          FROM TMP_PAPE_CODE     A
+         WHERE A.PAPE_DTY_SE_CD  = #{papeDtySeCd}
+           AND A.USE_YN          = 'Y'
+         GROUP BY
+               A.UP_PAPE_CD
+         ORDER BY
+               A.UP_PAPE_CD
+    </select>
+
+
+</mapper>

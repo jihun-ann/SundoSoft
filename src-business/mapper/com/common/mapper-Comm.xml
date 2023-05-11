@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Comm">
+
+    <!-- 코드 리스트 조회 -->
+    <select id="listCode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+               A.CD_ID              AS "code"
+             , A.CD_NM              AS "text"
+             , A.UP_CD_ID           AS "upCdId"
+             , A.CD_NM              AS "cdNm"
+             , A.CD_CN              AS "cdCn"
+             , A.CD_ORDR            AS "cdOrdr"
+          FROM SYS_CODE A
+         WHERE A.USE_YN = 'Y'
+         <if test="@common.util.CommUtils@isNotEmpty(upCdId)">
+           AND A.UP_CD_ID = #{upCdId}
+         </if>
+         <if test="@common.util.CommUtils@isEmpty(upCdId)">
+	         <if test="arrUpCd != null">
+	           AND A.UP_CD_ID IN
+	           <foreach collection="arrUpCd" item="code" index="index" separator="," open="(" close=")">
+	               #{code}
+	           </foreach>
+	         </if>
+	         <if test="arrUpCd == null">
+		         <if test="codeList == null"><!-- 조건오류에 따른 전체검색 방지 -->
+		           AND 1 = 0
+		         </if>
+		         <if test="codeList != null">
+		           AND A.CD_ID IN
+		           <foreach collection="codeList" item="code" index="index" separator="," open="(" close=")">
+		               #{code}
+		           </foreach>
+		         </if>
+	         </if>
+         </if>
+         ORDER BY
+               A.UP_CD_ID ASC
+             , A.CD_ORDR  ASC
+             , A.CD_ID    ASC
+    </select>
+
+    <!-- 코드상세조회 -->
+    <select id="viewCode" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT A.CD_ID               AS "cdId"
+             , A.CD_NM               AS "cdNm"
+             , A.CD_CN               AS "cdCn"
+             , A.UP_CD_ID            AS "upCdId"
+             , FN_GET_CODENM('NONE', A.UP_CD_ID)
+		                             AS "upCdNm"
+		     , A.CD_ORDR             AS "cdOrdr"
+		     , A.USE_YN              AS "useYn"
+          FROM SYS_CODE A
+         WHERE A.UP_CD_ID = #{upCdId}
+           AND A.CD_ID    = #{cdId}
+    </select>
+
+    <select id="listUpPape" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT PAPE_CD AS "code"
+             , PAPE_NM AS "text"
+          FROM (
+            SELECT LEVEL AS lvl , A.*
+            FROM   TMP_PAPE_CODE A
+            CONNECT BY PRIOR PAPE_CD = UP_PAPE_CD
+            <choose>
+                <when test="@common.util.CommUtils@isEqual(dtySeCd,'PP01')"> START  WITH UP_PAPE_CD = 'D00' </when>
+                <when test="@common.util.CommUtils@isEqual(dtySeCd,'PP02')"> START  WITH UP_PAPE_CD = 'D10' </when>
+                <when test="@common.util.CommUtils@isEqual(dtySeCd,'PP03')"> START  WITH UP_PAPE_CD = 'D20' </when>
+                <when test="@common.util.CommUtils@isEqual(dtySeCd,'PP04')"> START  WITH UP_PAPE_CD = 'D30' </when>
+                <otherwise> START  WITH UP_PAPE_CD = 'XXX' </otherwise>
+            </choose>
+            ORDER  SIBLINGS BY PAPE_CD
+        )
+        WHERE LVL = 1
+    </select>
+
+    <!-- UpPape에 속하는 모든 제출서류 코드 목록 조회  -->
+    <select id="listPape" resultType="java.util.HashMap" parameterType="java.util.HashMap">
+        SELECT A.PAPE_CD AS "code"
+             , A.PAPE_NM AS "text"
+          FROM TMP_PAPE_CODE A
+         WHERE UP_PAPE_CD = #{upPapeCd}
+         ORDER BY PAPE_CD
+    </select>
+
+</mapper>

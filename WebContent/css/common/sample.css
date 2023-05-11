@@ -1,0 +1,79 @@
+/* 공통샘플 CSS */
+html,body {height: 100%; padding: 0px; margin: 0px; }
+body {font-family:'Pretendard'; font-size:16px; font-weight:400; line-height:1.6; color:#202020; word-break:keep-all;}
+header {height:100px;}
+footer {height:130px; background:#fff; border-top:4px solid #325780; padding: 10px 50px; }
+section.contents { min-height: calc(100% - 260px); }
+
+section.contents .contents-wrap {padding:90px 0; width:1200px; max-width:100%; margin:0 auto;}
+section.contents .contents-wrap>img {max-width:100%;}
+
+header .header {padding:0 50px; height:100px; z-index:999999; display:table; width:100%;}
+header .header>* {display:table-cell; vertical-align:middle;}
+header .header .logo {width:436px; margin-top:25px;}
+header .header aside {width:237px;}
+header .header aside ul {overflow:hidden; padding:43px 0;}
+header .header aside ul li {float:left;}
+header .header aside ul li+li {border-left:1px solid rgba(30, 81, 169, .2);}
+header .header aside ul li a {display:block; padding:0 20px; font-size:14px; color:#333;}
+header .header aside ul li:last-child a {padding-right:0;}
+
+footer .footer-icons {font-size:0; padding-bottom:10px;}
+footer .footer-icons a {display:inline-block; padding:5px 10px; margin-right:10px; color:#000; font-size:13px; border:1px solid #f1f1f1; border-radius:50px;}
+footer .footer-iconsa:hover {background:#f1f1f1;}
+footer .footer-address p {color:#000; padding-top:7px;}
+footer .footer-address span {display:inline-block;}
+footer .footer-address span b {color:#000; font-weight:700;}
+
+
+.sample-table { width: 800px; border: 1px solid;  }
+.sample-table > tbody > tr { background-color: #FFFFFF; border-bottom: 1px solid black; }
+.sample-table th { height: 30px; padding: 5px; }
+.sample-table td { height: 30px; padding: 5px; }
+.sample-btn {width:200px; height: 30px;line-height:30px;background: #2D7BE3; border-radius: 5px; color: #fff;font-size: 14px;}
+
+
+/* *** 디자인적용 중 정렬문제 수정 *** */
+.tableWrap.type1 th {text-align:center;}
+/* *** 디자인적용 중 필수표시 추가 *** */
+.tableWrap.type1 tr td.must {position:relative;}
+.tableWrap.type1 tr td.must span {display:inline-block; position:relative; padding-right:10px;}
+.tableWrap.type1 tr td.must span:after {content:'*'; color:#f00; position:absolute; right:0; top:0; line-height:1;}
+
+.formGroup p.must ,.inputGroup p.must  {display:inline-block; padding-right:10px;}
+.formGroup p.must:after,.inputGroup p.must:after  {content:'*'; color:#f00; right:0; left:10px; top:0; line-height:1;}
+
+.tableWrap tr th.must {vertical-align:middle; text-align:center; position:relative; display:inline-block; padding-right:10px;}
+.tableWrap tr th.must:after {text-align:center; position:relative; content:'*'; color:#f00; right:0; left:10px; top:0; line-height:1;}
+
+.system-form tr td.must {vertical-align:middle; text-align:center; position:relative; display:inline-block; padding-right:10px;}
+.system-form tr td.must:after {text-align:center; position:relative; content:'*'; color:#f00; right:0; left:3px; top:0; line-height:1;}
+
+.app-content-wrap { width:100%; padding-left: 20px; padding-right: 20px; padding-top: 40px; padding-bottom: 100px;}
+.app-sublabel    { display: inline-block; padding-right:10px !important; font-weight:600; min-width: 80px; padding-left: 5px; }
+.app-sublabel-comment  { padding-right:10px !important; font-weight:600; color:#26779B; }
+.app-md { margin-top: inherit; }
+@media screen and (max-width: 768px) {
+	.app-md { margin-top:5px; }
+}
+.c_blue          { color:#1e51a9 !important;}
+.c_blue2         { color:#4f69eb !important;}
+.c_green         { color:#008a8c !important;}
+.c_red           { color:#f00 !important;}
+.c_yellow        { color:#fdb813 !important;}
+.f_NanumGothic   { font-family:'NanumGothic';}
+.w100            {width:100%;}
+
+.width-space.w5  {display:inline-block; width:5px;}
+.width-space.w20 {display:inline-block; width:20px;}
+.width-space.w20 {display:inline-block; width:20px;}
+.width-space.w30 {display:inline-block; width:30px;}
+.width-space.w40 {display:inline-block; width:40px;}
+.width-space.w50 {display:inline-block; width:50px;}
+
+.line50 {border-top:1px solid #e5e5e5; padding-top:50px; margin-top:50px;}
+.line50.dotted {border-top:2px dotted #ccc;}
+.app-checkbox label { margin-right: 10px; }
+.app-small-btn  {width: 76px; height: 30px;line-height: 30px;background: #2D7BE3;border-radius: 5px; color: #fff;font-size: 14px;}
+.app-textarea textarea { width: 100%; resize: none; overflow-y: hidden; /* prevents scroll bar flash */padding: 0.5em; /* prevents text jump on Enter keypress */ padding-bottom: 0.1em; min-height: 90px; }
+div.must span:after {content: '*';color: #f00;position: absolute;right: 0;top: 0;line-height: 1;}

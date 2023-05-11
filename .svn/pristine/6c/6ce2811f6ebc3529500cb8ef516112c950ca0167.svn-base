@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Main">
+
+	<resultMap type="business.com.user.service.IrinfoVO" id="irinfoMap">
+		<result column="ir_no" property="ir_no" />
+		<result column="ent_no" property="ent_no" />
+		<result column="ent_nm" property="ent_nm" />
+		<result column="brno" property="brno" />
+		<result column="ent_shap_cd" property="ent_shap_cd" />
+		<result column="ent_ty_cd" property="ent_ty_cd" />
+		<result column="fndn_ymd" property="fndn_ymd" />
+		<result column="ent_scal" property="ent_scal" />
+		<result column="induty_cd" property="induty_cd" />
+		<result column="hmpg_addr" property="hmpg_addr" />
+		<result column="rprsv_nm" property="rprsv_nm" />
+		<result column="eml_addr" property="eml_addr" />
+		<result column="ent_plac_addr" property="ent_plac_addr" />
+		<result column="telno" property="telno" />
+		<result column="fxno" property="fxno" />
+		<result column="main_biz_cn" property="main_biz_cn" />
+		<result column="core_itm_cn" property="core_itm_cn" />
+		<result column="biz_cn" property="biz_cn" />
+		<result column="pic_nm" property="pic_nm" />
+		<result column="pic_telno" property="pic_telno" />
+		<result column="rls_yn" property="rls_yn" />
+		<result column="pr_vido_url" property="pr_vido_url" />
+		<result column="inq_cnt" property="inq_cnt" />
+		<result column="rgtr_no" property="rgtr_no" />
+		<result column="reg_ymd" property="reg_ymd" />
+		<result column="mdfr_no" property="mdfr_no" />
+		<result column="mdfcn_ymd" property="mdfcn_ymd" />
+	</resultMap>
+	
+	<resultMap id="investMap" type="business.com.user.service.InvestInfoVO">
+		<result column="invt_no" property="invt_no" />
+		<result column="ent_no" property="ent_no" />
+		<result column="invt_rlm_cd" property="invt_rlm_cd" />
+		<result column="invt_amount" property="invt_amount" />
+	</resultMap>
+	
+	<resultMap id="investCode" type="business.com.user.service.InvestCodeVO">
+		<result column="invt_rlm_cd" property="invt_rlm_cd"/>
+		<result column="mng_yr" property="mng_yr"/>
+		<result column="invt_rlm_nm" property="invt_rlm_nm"/>
+		<result column="invt_rlm_cn" property="invt_rlm_cn"/>
+		<result column="use_yn" property="use_yn"/>
+		<result column="rgtr_no" property="rgtr_no"/>
+		<result column="reg_ymd" property="reg_ymd"/>
+		<result column="mdfr_no" property="mdfr_no"/>
+		<result column="mdfcn_ymd" property="mdfcn_ymd"/>
+	</resultMap>
+	
+	<resultMap id="industryCode" type="business.com.user.service.IndustryCodeVO">
+		<result column="induty_cd" property="induty_cd"/>
+		<result column="induty_nm" property="induty_nm"/>
+	</resultMap>
+	
+
+	<select id="findIrAll" resultMap="irinfoMap">
+		select zi.ir_no,zi.ent_no,zi.ent_nm,zi.brno,zi.ent_shap_cd,zi.ent_ty_cd,zi.fndn_ymd,CAST(zi.ent_scal as integer),zc.induty_nm ,zi.hmpg_addr,
+			zi.rprsv_nm,zi.eml_addr,zi.ent_plac_addr,zi.telno,zi.fxno,zi.main_biz_cn,zi.core_itm_cn,zi.biz_cn,zi.pic_nm,zi.pic_telno,
+			zi.rls_yn,zi.pr_vido_url,CAST(zi.inq_cnt as integer),zi.rgtr_no,to_char(zi.reg_ymd,'YYYY/MM/DD'),zi.mdfr_no,to_char(zi.mdfcn_ymd,'YYYY/MM/DD'),
+			zvc.invt_rlm_nm, ziv.invt_amount 
+			from z_ir_info zi
+			left join z_industry_code zc on zi.induty_cd = zc.induty_cd 
+			left join z_invest_info ziv on zi.ent_no = ziv.ent_no 
+			left join z_invest_code zvc on ziv.invt_rlm_cd = zvc.invt_rlm_cd 
+			order by cast(ent_nm as char)
+	</select>
+	
+	<select id="searchirL" parameterType="business.com.user.service.SearchValueVO" resultMap="irinfoMap">
+		select zi.ir_no,zi.ent_no,zi.ent_nm,zi.brno,zi.ent_shap_cd,zi.ent_ty_cd,zi.fndn_ymd
+				,CAST(zi.ent_scal as integer),zi.induty_cd,zc.induty_nm ,zi.hmpg_addr,zi.rprsv_nm
+				,zi.eml_addr,zi.ent_plac_addr,zi.telno,zi.fxno,zi.main_biz_cn,zi.core_itm_cn
+				,zi.biz_cn,zi.pic_nm,zi.pic_telno,zi.rls_yn,zi.pr_vido_url,CAST(zi.inq_cnt as integer)
+				,zi.rgtr_no,to_char(zi.reg_ymd,'YYYY/MM/DD'),zi.mdfr_no,to_char(zi.mdfcn_ymd,'YYYY/MM/DD')
+				,zvc.invt_rlm_nm,ziv.invt_no,ziv.ent_no ,ziv.invt_rlm_cd ,ziv.invt_amount 
+			from z_ir_info zi
+			left join z_industry_code zc on zi.induty_cd = zc.induty_cd 
+			left join z_invest_info ziv on zi.ent_no = ziv.ent_no 
+			left join z_invest_code zvc on ziv.invt_rlm_cd = zvc.invt_rlm_cd 
+			 <if test="searchVal != 'all' or investList[0] != '0'.toString() or industryList[0] != '0'.toString() or amountMin != 0 or amountMax != 10000000">
+				 where
+			 </if>
+			 <if test="searchVal != 'all'">
+			 	zi.ent_nm like concat(#{searchVal},'%') or zc.induty_nm like concat(#{searchVal},'%') or zvc.invt_rlm_nm like concat(#{searchVal},'%') or zi.rprsv_nm like concat(#{searchVal},'%')
+			 	<if test="investList[0] != '0'.toString() or industryList[0] != '0'.toString() or amountMin != 0 or amountMax != 10000000">
+			 		and
+			 	</if> 
+			 </if>
+			 <if test="investList[0] != '0'.toString()">
+				 <foreach collection='investList' item="invt" open="(" close=")" separator="or">
+				 		ziv.invt_rlm_cd = #{invt}
+			 	 </foreach>
+			 	 <if test="industryList[0] != '0'.toString() or amountMin != 0 or amountMax != 10000000">
+			 		and
+			 	</if> 
+			 </if>
+			 <if test="industryList[0] != '0'.toString()">
+				 <foreach collection='industryList' item="inds" open="(" close=")" separator="or">
+				 		zc.induty_cd  = #{inds}
+			 	 </foreach>
+			 	 <if test="amountMin != 0 or amountMax != 10000000">
+			 		and
+			 	</if> 
+			 </if>
+			 <if test="amountMin != 0 or amountMax != 10000000">
+				ziv.invt_amount between #{amountMin} and #{amountMax}
+			 </if>
+			order by cast(ent_nm as char)
+	</select>
+	
+	<select id="findInvestInfoAll" resultMap="investMap">
+		select * from z_invest_info order by cast(invt_no as numeric)
+	</select>
+	
+	<select id="findInvestCodeAll" resultMap="investCode">
+		select invt_rlm_cd,mng_yr,invt_rlm_nm,invt_rlm_cn,use_yn,rgtr_no,to_char(reg_ymd ,'YYYY/MM/DD'),mdfr_no ,to_char(mdfcn_ymd ,'YYYY/MM/DD') from z_invest_code order by cast(invt_rlm_cd as numeric)
+	</select>
+	
+	<select id="findIndustryCodeAll" resultMap="industryCode">
+		select * from z_industry_code order by cast(induty_cd  as numeric)
+	</select>
+	
+	<select id="findOneIrinfo" parameterType="String" resultMap="irinfoMap">
+		select * from z_ir_info where ent_no = #{entNum}
+	</select>
+	
+	<select id="findOneInvtinfo" parameterType="String" resultMap="investMap">
+		select * from z_invest_info where ent_no = #{entNum} 
+	</select>
+	
+	
+	<update id="updateirinfo" parameterType="HashMap">
+		update z_ir_info set 
+		<choose>
+			<when test="type == 'mainb'.toString()">
+				main_biz_cn = #{data} where ent_no = #{entNum}
+			</when>
+			<when test="type == 'corit'.toString()">
+				core_itm_cn = #{data} where ent_no = #{entNum}
+			</when>
+			<when test="type == 'bizcn'.toString()">
+				biz_cn = #{data} where ent_no = #{entNum}
+			</when>
+			<when test="type == 'picnm'.toString()">
+				pic_nm = #{data} where ent_no = #{entNum}
+			</when>
+			<when test="type == 'pictn'.toString()">
+				pic_telno = #{data} where ent_no = #{entNum}
+			</when>
+		</choose>
+	</update>
+</mapper>

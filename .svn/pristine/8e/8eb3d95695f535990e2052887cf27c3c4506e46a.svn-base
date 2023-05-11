@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OAuth">
+
+    <!-- OAUTH 정보 상세조회 -->
+    <select id="viewOAuth" resultType="business.com.user.service.OAuthVO" parameterType="java.util.HashMap">
+        SELECT USER_NO              AS "userNo",
+		       OATH_CD              AS "oathCd",
+               USER_NM              AS "userNm",
+               OATH_ID              AS "oathId",
+               EMAIL                AS "email",
+               MOBILE               AS "mobile",
+               RGTR_NO              AS "rgtrNo",
+               MDFR_NO              AS "mdfrNo",
+               TO_CHAR(REG_YMD,   'yyyy-mm-dd hh24:mi:ss')  AS "regDttm",
+               TO_CHAR(REG_YMD,   'yyyy-mm-dd')             AS "regDate",
+               TO_CHAR(MDFCN_YMD, 'yyyy-mm-dd hh24:mi:ss')  AS "mdfDttm",
+               TO_CHAR(MDFCN_YMD, 'yyyy-mm-dd')             AS "mdfDate"
+          FROM TMP_OAUTH
+         WHERE USER_NO   = #{userNo}
+           AND OATH_CD   = #{oathCd}
+    </select>
+
+    <!-- OAUTH 정보 저장 -->
+    <insert id="regiOAuth" parameterType="business.com.user.service.OAuthVO">
+        INSERT 
+          INTO TMP_OAUTH 
+             ( USER_NO,
+               OATH_CD,
+               USER_NM,
+               OATH_ID,
+               EMAIL,
+               MOBILE,
+               RGTR_NO,
+               REG_YMD
+             )
+        VALUES
+             ( #{userNo},
+               #{oathCd},
+               #{userNm},
+               #{oathId},
+               #{email},
+               #{mobile},
+               #{gsUserNo},
+               NOW()  
+             )
+    </insert>
+
+    <!-- OAUTH 정보 수정 -->
+    <update id="updtOAuth" parameterType="business.com.user.service.OAuthVO">
+        UPDATE TMP_OAUTH 
+           SET MDFR_NO   = #{gsUserNo},
+		<if test="@common.util.CommUtils@isNotEmpty(userNm)"> USER_NM = #{userNm},</if>
+        <if test="@common.util.CommUtils@isNotEmpty(oathId)"> OATH_ID = #{oathId},</if>
+        <if test="@common.util.CommUtils@isNotEmpty(email )"> EMAIL   = #{email },</if>
+        <if test="@common.util.CommUtils@isNotEmpty(mobile)"> MOBILE  = #{mobile},</if>
+               MDFCN_YMD = NOW()  
+         WHERE USER_NO   = #{userNo}
+           AND OATH_CD   = #{oathCd}
+    </update>
+
+    <!-- OAUTH 정보 삭제 -->
+    <delete id="deltOAuth" parameterType="business.com.user.service.OAuthVO">
+        DELETE 
+          FROM TMP_OAUTH 
+         WHERE USER_NO   = #{userNo}
+           AND OATH_CD   = #{oathCd}
+    </delete>
+
+</mapper>

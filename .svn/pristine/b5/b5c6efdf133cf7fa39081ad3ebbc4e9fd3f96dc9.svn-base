@@ -1,0 +1,149 @@
+# \uc2dc\uc2a4\ud15c
+system.code	= USR
+system.servername = 127.0.0.1
+domain.url	= http://localhost/,http://temp.sundosoft.co.kr/
+
+# \uc2dc\uc2a4\ud15c \uc0ac\uc6a9\uad6c\ubd84 (real:\uc6b4\uc601, dev:\uac1c\ubc1c)
+system.real	= dev
+
+# \uad8c\ud55c\uccb4\ud06c \uc5ec\ubd80[SecurityInterceptor] \uc0ac\uc6a9\uc5ec\ubd80 (\uad8c\ud55c\uccb4\ud06c, \ud398\uc774\uc9c0\ub85c\uadf8\ub4f1\ub85d, \ub85c\uadf8\uc778\ub85c\uadf8\ub4f1\ub85d)
+auth.check	= true
+
+# \ubc84\ud2bc\uad8c\ud55c\uccb4\ud06c \uc5ec\ubd80[ButtonTag] \uc0ac\uc6a9\uc5ec\ubd80
+auth.btn.check	= false
+
+# \uc2dc\uc2a4\ud15c \uc81c\ud55c\ub41c\uc0ac\uc6a9\uc790 \ub864 (\ube44\ud68c\uc6d0)
+system.role.restricted	= ROLE_USR_RESTRICTED
+# \uc2dc\uc2a4\ud15c \uc77c\ubc18\uc0ac\uc6a9\uc790 \ub864 (\ud68c\uc6d0)
+system.role.user = ROLE_AUTH_USR
+
+# Database Type
+Globals.DbType = PostgreSQL
+
+# JDBC (PostgreSQL) - \uac1c\ubc1c
+Globals.PostgreSQL.Driver 	= org.postgresql.Driver
+Globals.PostgreSQL.Url 		= jdbc:postgresql://210.113.102.174:5432/postgres?currentSchema=apfs
+Globals.PostgreSQL.UserName = postgres
+Globals.PostgreSQL.Password = sundo0930)(#)soft
+
+# File Attachment
+upload.real.dir		= /APFS/source/PROJECT_APFS_FILES/upload/real/
+upload.temp.dir 	= /APFS/source/PROJECT_APFS_FILES/upload/temp/
+upload.excel.dir 	= /APFS/source/PROJECT_APFS_FILES/upload/excel/
+upload.log.dir		= /APFS/source/PROJECT_APFS_FILES/upload/logs/
+upload.remove.dir   = removed/
+upload.path 		= /upload/
+download.url 		= http://localhost:8088
+
+# Excel Templete
+excel.templete.dir	= /APFS/source/PROJECT_RELIEF_USR/WebContent/WEB-INF/excel
+excel.templete.servletContextDir = /WEB-INF/excel
+
+# PDF Templete
+pdf.template.servletContextDir = /WEB-INF/template
+
+# Exclude Program - Access Program Regi.
+exclude.acc.prog 	= login.do, loginSucc.do, logout.do, imageSrc.do
+
+# Session ID
+SESS.PAGEINFO		= PAGEINFO
+SESS.MENUINFO		= MENUINFO
+SESS.MENULIST       = MENULIST
+SESS.ACCESSURL      = ACCESSURL
+SESS.SYSTEMCODE     = SYSCODE
+
+# Session Time Cookie
+COOK.LATEST.TIME    = COOK_LATEST_TIME
+COOK.EXPIRE.TIME    = COOK_EXPIRE_TIME
+
+# attach file #
+file.all.allow.exts	= hwp, doc, docx, xls, xlsx, ppt, pptx, pdf, jpg, jpeg, png, gif, bmp, txt, zip, rar, gz
+file.bbs.allow.exts	= hwp, doc, docx, xls, xlsx, ppt, pptx, pdf, jpg, jpeg, png, gif, bmp, txt, zip, rar, gz
+file.img.allow.exts	= jpg,jpeg,gif,bmp,png
+
+
+## \ubaa8\ube4c\ub9ac\uc5b8\uc2a4 (\ubcf8\uc778\uc778\uc99d) \ud658\uacbd\uc124\uc815 
+#--------------------------------------------------------
+
+# Mobilians Service ID
+MOBILIANS.SVCID = 000000000000
+# Mobilians Pay Mode - \ucc98\ub9ac\uad6c\ubd84(00:\ud14c\uc2a4\ud2b8\uacb0\uc81c, 10:\uc2e4\uac70\ub798\uacb0\uc81c)
+MOBILIANS.PAYMODE = 00
+# Mobilians CI Mode - SMS\ubc1c\uc1a1 (61:SMS\ubc1c\uc1a1  67:SMS\ubbf8\ubc1c\uc1a1)
+MOBILIANS.CIMODE = 67
+# Mobilians Encrypt Use - \uc554\ud638\ud654 \uc0ac\uc6a9 \uc5ec\ubd80
+MOBILIANS.CRYPTYN = Y
+# Mobilians Encrypt Flag - \uc554\ud638\ud654 Key \uad6c\ubd84 (1 or 2 : \uac00\ub9f9\uc810 \uad00\ub9ac\uc790 \ub4f1\ub85d \ud6c4 \uc0ac\uc6a9)
+MOBILIANS.CRYPTGB = 1
+# Mobilians Encrypt Password - \uc554\ud638\ud654 \ube44\ubc00\ubc88\ud638
+MOBILIANS.PASSOWRD = 0000
+# Mobilians Domain - \uac00\ub9f9\uc810 \ub3c4\uba54\uc778
+MOBILIANS.SITEURL = www.apfs.kr
+# Mobilians OK URL - \ucc98\ub9ac\uacb0\uacfc\uc218\uc2e0 \ud398\uc774\uc9c0
+MOBILIANS.OKURL = /com/common/okurlMobilians.do
+# Mobilians NOTI URL - \uac00\ub9f9\uc810\uacb0\uacfc\uc804\uc1a1 \ud398\uc774\uc9c0
+MOBILIANS.NOTIURL = /com/common/notiurlMobilians.do
+
+## OAUTH \ub124\uc774\ubc84 \ub85c\uadf8\uc778 \ud658\uacbd\uc124\uc815 
+#--------------------------------------------------------
+OAUTH.NAVER = NAVER
+OAUTH.NAVER.CLIENT_ID = [\ub124\uc774\ubc84CLIENT\uc544\uc774\ub514]
+OAUTH.NAVER.CLIENT_SECRET = [\ub124\uc774\ubc84\uc2dc\ud06c\ub9bf\ud0a4]
+OAUTH.NAVER.SESSION_STATE = oauth_state
+OAUTH.NAVER.CALLBACK_URL = http://localhost:9081/apfs/com/common/naverLoginCheck.do
+OAUTH.NAVER.AUTHORIZE_URL = https://nid.naver.com/oauth2.0/authorize
+OAUTH.NAVER.TOKEN_URL = https://nid.naver.com/oauth2.0/token?grant_type=authorization_code
+OAUTH.NAVER.PROFILE_URL = https://openapi.naver.com/v1/nid/me
+OAUTH.NAVER.UNLINK_URL = https://nid.naver.com/oauth2.0/token?grant_type=delete
+
+## OAUTH \uce74\uce74\uc624 \ub85c\uadf8\uc778 \ud658\uacbd\uc124\uc815 
+#--------------------------------------------------------
+OAUTH.KAKAO = KAKAO
+OAUTH.KAKAO.CLIENT_ID = [\uce74\uce74\uc624CLIENT\uc544\uc774\ub514]
+OAUTH.KAKAO.CLIENT_SECRET = [\uce74\uce74\uc624\uc2dc\ud06c\ub9bf\ud0a4]
+OAUTH.KAKAO.SESSION_STATE = kakao_oauth_state
+OAUTH.KAKAO.CALLBACK_URL = http://localhost:9081/apfs/com/common/kakaoLoginCheck.do
+OAUTH.KAKAO.AUTHORIZE_URL = https://kauth.kakao.com/oauth/authorize
+OAUTH.KAKAO.TOKEN_URL = https://kauth.kakao.com/oauth/token
+OAUTH.KAKAO.PROFILE_URL = https://kapi.kakao.com/v2/user/me
+OAUTH.KAKAO.UNLINK_URL = https://kapi.kakao.com/v1/user/unlink
+
+## KODATA API \ud658\uacbd\uc124\uc815 
+#--------------------------------------------------------
+# \uc6b4\uc601
+#KODATA.API.URL = https://kedex.cretop.com:6059
+# \uac1c\ubc1c
+KODATA.API.URL = https://testkedex.cretop.com:6059
+# \uc11c\ube44\uc2a4\uba85
+KODATA.API.PATH = /enpinfo
+# \uae30\uad00ID
+KODATA.API.USERID = [\uae30\uad00ID]
+
+## SPRING MAIL \ud658\uacbd\uc124\uc815 
+#--------------------------------------------------------
+spring.mail.default-encoding=UTF-8
+
+# GMAIL SMTP
+#spring.mail.host=smtp.gmail.com
+#spring.mail.port=587
+# NAVER SMTP
+#spring.mail.host=smtp.naver.com
+#spring.mail.port=465
+# KAKAO SMTP
+spring.mail.host=smtp.daum.net
+spring.mail.port=465
+#spring.mail.host=[\uba54\uc77cSMTP\uc11c\ubc84\uc8fc\uc18c]
+#spring.mail.port=[\uba54\uc77cSMTP\uc11c\ubc84\ud3ec\ud2b8]
+spring.mail.username=[\uba54\uc77c\uc11c\ubc84\uacc4\uc815]
+spring.mail.password=[\uba54\uc77c\uc11c\ubc84\ube44\ubc00\ubc88\ud638]
+spring.mail.properties.mail.debug=true
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+# GMAIL SMTP \uc0ac\uc6a9\uc2dc \ud544\uc218\ud56d\ubaa9
+spring.mail.properties.mail.mime.charset=UTF-8
+spring.mail.properties.mail.transport.protocol=smtp
+# \ub124\uc774\ubc84,\uce74\uce74\uc624 SMTP \uc0ac\uc6a9\uc2dc \ud544\uc218\ud56d\ubaa9
+spring.mail.properties.mail.smtps.ssl.checkserveridentity=true
+spring.mail.properties.mail.smtps.ssl.trust=*
+spring.mail.properties.mail.smtp.socketFactory.class=javax.net.ssl.SSLSocketFactory
+
